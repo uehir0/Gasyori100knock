@@ -19,10 +19,18 @@ H_new=np.round(H*d).astype(np.int)
 W_new=np.round(W*a).astype(np.int)
 out =np.zeros((H_new+1,W_new+1,C),dtype=np.float32)
 #ここで新規にいじりだす拡大されたボードを用意してあげる
+x_new = np.tile(np.arange(W_new), (H_new, 1))
+y_new = np.arange(H_new).repeat(W_new).reshape(H_new, -1)
+#それぞれのx座標とy座標を内包した数列
 
+det=a*d-b*c
+x=np.round((d*x_new-b*y_new)/det).astype(np.int)- tx + 1
+y=np.round((-c*x_new+a*y_new)/det).astype(np.int) - ty + 1
 
+x = np.minimum(np.maximum(x, 0), W+1).astype(np.int)
+y = np.minimum(np.maximum(y, 0), H+1).astype(np.int)
 
-
+out[y_new, x_new] = img[y, x]
 
 
 out[out>255] = 255 #RGBの値は0~255で表される。
